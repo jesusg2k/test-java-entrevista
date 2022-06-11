@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="personas:war2">
+    <output-path>$PROJECT_DIR$/../../../../servidor/wildfly-26.1.1.Final/standalone/deployments</output-path>
+    <root id="archive" name="personas.war">
+      <element id="artifact" artifact-name="personas:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,118 +1,106 @@
-<h1 align="center">¡Bienvenido! 👋</h1>
-<p>
-  <a href="https://twitter.com/sodepsa">
-    <img alt="Twitter: sodepsa" src="https://img.shields.io/twitter/follow/sodepsa.svg?style=social" target="_blank" />
-  </a>
-</p>
+Laboratorio de WebServices
 
-> El siguiente proyecto contiene desafíos a resolver para potenciales developers. Es un proyecto elaborado y mantenido por Sodep S.A.
+**Elementos a utilizar**
+* JavaEE, JDK 1.8 
+* IDE de preferencia, utilizado IDEA INTELIJ para este proyecto. 
+* Instalar el motor de base de datos Mysql
+* Servidor wildfly-26.1.1.Final
 
-### 🏠 [Visitar SODEP](http://sodep.com.py)
+**Importar proyecto**
+ * Abrir el IDE IDEA
+ * Menú File -> Open -> Buscar la carpeta 'personas' y abrirlo como Maven Project.
+ * Finalizar
+ * El IDE comenzará a importar las librerías de Maven 
+ * (ó en todo caso entrar en pom.xml y sincronizar las dependencias)
+ 
+**Base de datos**
+ * Crear una base de datos llamada db_tareas.
+ * Configurar los datos de configuración y acceso en la clase "Bd.java" dentro del package 'dao'.
 
-## Instrucciones
 
-Leer las instrucciones con atención e implementar lo que se tiene familiaridad en primer lugar. Adicionales instrucciones serán recibidas por e-mail por la persona que te envió este repo.
+``` 
+ Reemplazar root y password por sus contraseñas del Mysql Server.
+ mysql -uroot -ppassword
+ create database db_tareas
+ use db_tareas
+ source "..\personas\src\main\java\py\una\pol\personas\bdscript\backup-tareas" 
+ (se puede arrastrar el archivo .sql a la consola o importarlo desde otro programa)
+```
 
-Para el backend es requerimiento utilizar el lenguaje **Java**, y en general se puede utilizar cualquier framework/librería que facilite la implementación.
 
-## Proyecto Manejador de Tareas
+**Servidor wildfly-26.1.1.Final**
+* Se puede descargar desde su página oficial, una vez descargado, se debe descomprimir
+* Por motivos de que a veces el puerto 8080 puede estar ocupado (justamente tuve ese problema)
+* Se va hacer un offset de 1 puerto, es decir que si normalmente iba a trabajar en :8080, ahora lo hará en :8081
+* Buscar en archivo en C:\Users\User\Documents\Entrevista\servidor\wildfly-26.1.1.Final\standalone\configuration\standalone.xml
+* Por defecto: <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}"
+* Cambiar el último 0 por 1 y se aplicará el offset al reiniciar el iniciar el servidor.
+* <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:1}"
+* En caso de que el puerto de Wildfly no sea 8081, se deberá modificar en "TestUnitario" la variable puerto por el correspondiente
 
-El primer desafío es desarrollar un manejador de tareas.
+** Para iniciar el servidor **
+* Para iniciar el servidor Wildfly podemos ejecutar manualmente el archivo ubicado en: 
+* "wildfly-26.1.1.Final\bin\standalone.bat"
 
-### Requisitos para el backend
 
-#### 1) Implementar servicios REST de administración de tareas
+* Para hacer el despliegue de nuestra aplicación web y API REST. 
+* Debemos colocar el artifact "personas.war" en la carpeta "wildfly-26.1.1.Final\standalone\deployments" de Wildfly.
+* Automáticamente, va empezar a desplegar la aplicación y en segundas estará en linea.
+* El archivo "personas.war" lo puedes encontrar en este proyecto en "\personas\target\personas.war"
 
-El primer paso es implementar servicios REST que faciliten el trabajo con tareas mediante las siguientes acciones:
 
-* Listado, creación y eliminación de tareas
-* Un filtro del listado de tareas que permita obtener las tareas completadas, activas (aún no completadas) y todas las tareas (activas y completadas)
-* Actualización de una tarea, editando su descripción y poder marcarla como "completada"
-* Además de la eliminación individual, permitir eliminar todas las tareas completadas
+** APLICACIÓN WEB ** 
+* Para acceder a la aplicación web puedes hacerlo mediante el navegador ingresando en
+* http://localhost:8081/personas/index.html
+* En la aplicación web se encontrarán 4 vistas diferentes con tablas de resultados
+* Todas las tareas, tareas completadas, tareas activas y el "dashboard" de estadísticas
+* recordando que 8081 es el puerto que este usando wildfly.
 
-Cada tarea tiene las siguientes propiedades:
-* Una descripción
-* Una fecha y hora de creación
-* Una fecha y hora de completitud
-* Un estado que permita saber si la tarea está activa o ya fue completada
+**Mini POSTMAN Incluido**
+```
+Menu Principal
+1. Alta nueva tarea
+2. Baja de tarea
+3. Editar descripcion tarea
+4. Marcar tarea como completada
+5. Eliminar todas las tareas completadas
+6. Ver Lista de Usuarios
+7. Crear Usuario Prueba
+8. Asignar usuario a tarea
+9. Salir
+```
 
-Se puede agregar otras propiedades que se consideren necesarias.
+* Para facilitar algunas pruebas se realizó una clase ejecutable que interactua con la API REST implementada en el backend.
 
-#### 2) Implementar servicios REST de asignación de tareas a usuarios
+**Deployar en Servidor**
+ * Desde el IDE Eclipse, configurar el servidor de aplicaciones Wildfly (Verificar la guía de clase anterior sobre el laboratorio de servidor de aplicaciones JavaEE)
+ * Deploy del proyecto "personas" en el servidor Wildfly
 
-Se pide contar con un servicio que permita asignar una tarea a un usuario del sistema. La restricción para este servicio es que un usuario no pueda tener más de 5 tareas activas al mismo tiempo. Corresponde al servicio implementar dicha validacion.
 
-Se puede modelar la estructura de un usuario con las propiedades que se consideren necesarias.
+**END POINTS**
 
-#### 3) Implementar servicios REST de estadísticas de tareas
 
-Se pide un servicio REST de consulta que devuelva los siguientes datos estadísticos:
+**SERVICIO REST DE ESTADISTICAS**
+ * GET http://localhost:8080/personas/rest/estadisticas/tarea-mas-larga
+ * GET http://localhost:8080/personas/rest/estadisticas/tarea-mas-corta
+ * GET http://localhost:8080/personas/rest/estadisticas/cantidad-tareas-concluidas-hoy
+ * GET http://localhost:8080/personas/rest/estadisticas/cantidad-tareas-activadas-hoy
+ * GET http://localhost:8080/personas/rest/estadisticas/porcentaje-completado
 
-* Tarea con mayor duración, entre el momento que fué creada y completada
-* Tarea con menor duración
-* Cantidad de tareas que fueron completadas en el día actual
-* Cantidad de tareas activas en el día actual
-* Porcentaje de tareas completadas sobre el total de tareas existentes
+**SERVICIO REST DE ASIGNACION TAREAS**
+* GET http://localhost:8080/personas/rest/asignaciontareas/all-usuarios
+* POST http://localhost:8080/personas/rest/asignaciontareas/crear-usuario
+* POST http://localhost:8080/personas/rest/asignaciontareas/ -> ASIGNA USUARIO A TAREA
 
-#### 4) Test Unitarios
 
-Escribir test unitarios o de integración que verifiquen los anteriores requerimientos funcionales del 1 al 3. No es necesario tener full coverage, sino seleccionar los puntos más críticos de la lógica del sistema y enfocarse en eso. Por ejemplo, asegurarse de que se puedan crear correctamente las tareas y marcarlas como completadas.
+**SERVICIO REST DE ASIGNACION TAREAS**
+* GET http://localhost:8080/personas/rest/tareas/all-active -> DEVUELVE TAREAS ACTIVAS
+* GET http://localhost:8080/personas/rest/tareas/all-completed -> DEVUELVE TAREAS COMPLETADAS 
+* POST http://localhost:8080/personas/rest/tareas/ -> CREA NUEVA TAREA
+* POST http://localhost:8080/personas/rest/tareas/tocomplete -> MARCA COMO COMPLETADO
+* POST http://localhost:8080/personas/rest/tareas/update -> ACTUALIZA TAREA
+* DELETE http://localhost:8080/personas/rest/tareas -> ELIMINA UNA TAREA
+* DELETE http://localhost:8080/personas/rest/tareas/deletealltareas -> ELIMINA TODAS LAS TAREAS COMPLETADAS
 
-### Requisitos para el frontend
 
-El desafío aquí es crear una aplicación WEB que permita administrar tareas y que haga uso de los servicios REST desarrollados en el backend.
-
-La aplicación WEB debe ofrecer las funcionalidades de:
-* Alta y baja de tareas
-* Edición de la descripción de una tarea
-* Marcar una tarea como completada
-* Filtrar tareas completadas y activas
-* Eliminar todas las tareas completadas
-* Asignación de tareas a usuarios
-* Ver un dashboard con información estadística de tareas, de acuerdo a lo que retorne el backend
-
-## Proyecto Frontend: GitHub Client
-
-El objetivo es desarrollar una página web que actué como cliente del [API de GitHub](https://developer.github.com/v3/).
-
-El cliente muestra la siguiente información obtenida de GitHub:
-
-* Lista de repositorios ordenados por los más populares y con posibilidad de filtrar por el día, la semana y el mes actual
-* Por cada repositorio mostrar su dueño, avatar, cantidad de estrellas y cantidad de issues abiertos. Además de otra información que se considere útil para enriquecer visualmente el listado de repositorios
-* Permitir buscar una persona u organización y mostrar los repositorios públicos que posee clasificados por cantidad de estrellas
-
-Diseñar y estructurar el HTML/CSS de la página, de la forma más amigable posible en el tiempo que se tiene disponible.
-
-## Guías generales
-
-* Proveer de una forma sencilla de probar los ejercicios. Para el caso del backend idealmente sería unos datos de prueba para inserción en base de datos y además una forma de poder invocar a los servicios REST. Para el frontend adjuntar los API KEY necesarios para comunicación con GitHub o la forma de conseguirlo 
-* Adjuntar documentación con instrucciones detalladas de cómo levantar la solución enviada. Ya sea comandos de instalación/ejecución y todo lo necesario para ejecutar y probar la solución
-* Se puede implementar la solución con cualquier framework o librería que facilite el desarrollo. Y se recomienda utilizar herramientas con las que se esté familiarizado. La único no negociable es la **utilización del lenguaje Java** 🙃.
-
-## Empezando el Desafío
-
-Para empezar crear un fork de este repositorio para implementar los ejercicios.
-
-Adjuntar cualquier documentación al proyecto en forma de archivos con extensión `.md`.
-
-Se recomienda ir haciendo commits a medida que se avanza con la solución. Agrupando estos commits si corresponde hacerlo.
-
-## Envíar el código para evaluación
-
-Luego al finalizar enviar un email con el link al fork a la persona que te envió este test.
-
-¡Buena suerte! 🎉
-
-## Autor
-
-👤 **Sodep S.A.**
-
-* Twitter: [@sodepsa](https://twitter.com/sodepsa)
-* Github: [@sodep](https://github.com/sodep)
-
-## Dános tu apoyo
-
-Con una ⭐️ si este repo te sirvió de ayuda.
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+	 
