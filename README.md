@@ -1,5 +1,3 @@
-Laboratorio de WebServices
-
 **Elementos a utilizar**
 * JavaEE, JDK 1.8 
 * IDE de preferencia, utilizado IDEA INTELIJ para este proyecto. 
