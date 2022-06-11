@@ -70,10 +70,6 @@ Menu Principal
 
 * Para facilitar algunas pruebas se realizó una clase ejecutable que interactua con la API REST implementada en el backend.
 
-**Deployar en Servidor**
- * Desde el IDE Eclipse, configurar el servidor de aplicaciones Wildfly (Verificar la guía de clase anterior sobre el laboratorio de servidor de aplicaciones JavaEE)
- * Deploy del proyecto "personas" en el servidor Wildfly
-
 
 **END POINTS**
 
