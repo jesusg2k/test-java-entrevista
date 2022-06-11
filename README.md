@@ -38,7 +38,7 @@ Laboratorio de WebServices
 * <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:1}"
 * En caso de que el puerto de Wildfly no sea 8081, se deberá modificar en "TestUnitario" la variable puerto por el correspondiente
 
-** Para iniciar el servidor **
+**Para iniciar el servidor**
 * Para iniciar el servidor Wildfly podemos ejecutar manualmente el archivo ubicado en: 
 * "wildfly-26.1.1.Final\bin\standalone.bat"
 
@@ -49,7 +49,7 @@ Laboratorio de WebServices
 * El archivo "personas.war" lo puedes encontrar en este proyecto en "\personas\target\personas.war"
 
 
-** APLICACIÓN WEB ** 
+**APLICACIÓN WEB** 
 * Para acceder a la aplicación web puedes hacerlo mediante el navegador ingresando en
 * http://localhost:8081/personas/index.html
 * En la aplicación web se encontrarán 4 vistas diferentes con tablas de resultados
